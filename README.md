@@ -52,10 +52,12 @@ Scanning & Footprinting::
 			masscan -c <file>.conf
 
 Vulnerability Assessment:
+	
 	Engagement -> Information Gathering -> Footprinting & Scanning -> Vulnerability Assessment -> Reporting
 	No active exploitation, POC on paper
 	
 Web Attacks:
+	
 	netcat:
 		nc <Address> <port>
 		HEAD / HTTP/1.0
@@ -242,6 +244,7 @@ System Attacks:
 				Pop - removes the last inserted element
 
 Network Attacks:
+	
 	Hydra -L users.txt -P passwords.txt <service://server> <options>
 	Telnet:
 		hydra -L users.txt -P pass.txt telnet://target.server
