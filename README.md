@@ -51,7 +51,7 @@ Scanning & Footprinting::
 			--echo > <file>.conf
 			masscan -c <file>.conf
 
-Vulnerability Assessment:
+Vulnerability Assessment::
 	
 	Engagement -> Information Gathering -> Footprinting & Scanning -> Vulnerability Assessment -> Reporting
 	No active exploitation, POC on paper
@@ -60,7 +60,7 @@ Vulnerability Assessment:
 		systemctl start nessusd / /etc/init.d/nessusd start
 			
 	
-Web Attacks:
+Web Attacks::
 	
 	netcat:
 		nc <Address> <port>
@@ -219,7 +219,7 @@ Web Attacks:
 					-OR-
 					--data="user='a&password=a" -p user...
 
-System Attacks:
+System Attacks::
 	
 	Wordlists - apt-get install seclists
 
@@ -261,7 +261,7 @@ System Attacks:
 			A variable that holds a memory address. This address is the location of another object in memory.
 			
 
-Network Attacks:
+Network Attacks::
 	
 	Hydra -L users.txt -P passwords.txt <service://server> <options>
 	Telnet:
